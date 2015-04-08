@@ -7,7 +7,17 @@ class EmployeesController < ApplicationController
   # GET /employees
   # GET /employees.json
   def index
-    @employees = Employee.all
+    @pageSize = params[:pageSize] || 10
+    @pageNo = params[:currentPage] || 1
+    query = { name_or_surname_cont: params[:term]}
+     
+    if params[:term]
+      @employees = Employee.ransack(query).result if params[:term] && !params[:term].empty?
+    else  
+      @employees = Employee.all
+    end
+    @total = @employees.size
+    @employees = @employees.page(@pageNo).per(@pageSize)
   end
 
   # GET /employees/1
