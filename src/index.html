@@ -1,15 +1,10 @@
 <!DOCTYPE html>
-<html ng-app="ngBoilerplate" ng-controller="AppCtrl">
+<html ng-app="myAngularApp" ng-controller="AppCtrl">
   <head>
-    <title ng-bind="pageTitle"></title>
+    <title ng-bind="AngularGridDemo"></title>
 
     <!-- social media tags -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@joshdmiller">
-    <meta name="twitter:title" content="ngBoilerplate">
-    <meta name="twitter:description" content="Non-Trivial AngularJS Made Easy: Everything you need to kickstart AngularJS projects: a best-practice directory structure, an intelligent build system, and the best web design libraries around.">
-    <meta name="twitter:creator" content="@joshdmiller">
-    <meta name="twitter:image:src" content="https://a248.e.akamai.net/assets.github.com/images/modules/logos_page/Octocat.png?1366128846">
+    
     <meta property="og:title" content="ngBoilerplate" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="http://bit.ly/ngBoilerplate" />
@@ -63,7 +58,7 @@
             <li ui-sref-active="active">
               <a href ui-sref="about">
                 <i class="fa fa-info-circle"></i>
-                What is it?
+                What is it ...?
               </a>
             </li>
             <li>
@@ -84,29 +79,26 @@
                 Support
               </a>
             </li>
+            <li ui-route="/employees" ng-class="{active:$uiRoute}">
+              <a href="#/employees">
+                <i></i>
+                Employees
+              </a>
+            </li>
           </ul>
         </div>
       </div>
     </div>
 
-    <div class="container" ui-view="main"></div>
+    <div class="container" ui-view="main">
+      
+    </div>
 
     <footer class="footer">
       <div class="container">
         <div class="footer-inner">
-          <ul class="social">
-            <li><a target="_blank" href="http://gplus.to/joshdmiller"><i class="fa fa-google-plus-sign"></i></a></li>
-            <li><a target="_blank" href="http://twitter.com/joshdmiller"><i class="fa fa-twitter-sign"></i></a></li>
-            <li><a target="_blank" href="http://linkedin.com/in/joshdmiller"><i class="fa fa-linkedin-sign"></i></a></li>
-            <li><a target="_blank" href="http://github.com/ngbp/ngbp"><i class="fa fa-github-sign"></i></a></li>
-          </ul>
-          
-
           <p>
-            (c) 2013 <a href="http://www.joshdavidmiller.com">Josh David Miller</a>. 
-            <a href="http://github.com/ngbp/ngbp/fork_select">Fork this</a>
-            to kickstart your next project.
-            <br />
+            (c) 2013 
             ngbp is based on
             <a href="http://www.angularjs.org">AngularJS</a>,
             <a href="http://getbootstrap.com">Bootstrap</a>, 
