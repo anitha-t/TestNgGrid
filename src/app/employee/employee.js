@@ -85,7 +85,7 @@ angular.module( 'myAngularApp.employee', [
 
   //watch for pagination option.here pagingOptions will be watched each time value changes and then set the data accordingly   
   $scope.$watch('pagingOptions', function (newVal, oldVal) {
-    if (newVal !== oldVal || newVal.currentPage !== oldVal.currentPage) {
+    if (newVal !== oldVal || newVal.currentPage !== oldVal.currentPage || newVal.pageSize !== oldVal.currentPage) {
       $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage, $scope.filterOptions.filterText);
     }
   }, true);
