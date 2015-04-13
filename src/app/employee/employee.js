@@ -3,10 +3,11 @@ angular.module( 'myAngularApp.employee', [
   'placeholders',
   'ui.bootstrap',
   'ngResource',
-  'ngGrid'
+  'ngGrid',
+  'restangular'
 ])
 
-.config(function config( $stateProvider ) {
+.config(function config( $stateProvider, RestangularProvider ) {
   $stateProvider.state( 'employees', {
     url: '/employees',
     views: {
@@ -17,9 +18,25 @@ angular.module( 'myAngularApp.employee', [
     },
     data:{ pageTitle: 'Employees' }
   });
+  RestangularProvider.setRequestSuffix('.json');
+  RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
+    var extractedData;
+    // .. to look for getList operations
+    if (operation === "getList") {
+      // .. and handle the data and meta data
+      extractedData = data.employees;
+      extractedData.currentPage = data.currentPage;
+      extractedData.pageSize = data.pageSize;
+      extractedData.totalRecords = data.totalRecords;
+    } else {
+      extractedData = data.data;
+    }
+    return extractedData;
+  });
+
 })
 
-.controller( 'EmployeesCtrl', function EmployeesCtrl( $scope, $http ) {
+.controller( 'EmployeesCtrl', function EmployeesCtrl( $scope, Restangular ) {
   //$scope.employees = EmployeeResponse.query();
   //these are the filter options which includes options for filtering the data
   $scope.filterOptions = {
@@ -37,25 +54,17 @@ angular.module( 'myAngularApp.employee', [
     currentPage: 1
   };
 
-  $scope.getDataFromServer = function (params, pageSize) {
-    $http({
-      method:'GET',
-      url:'/employees.json',
-      params: params
-    })
-    .success(function (responseData) {
-      //with data must send the total no of items as well
+  $scope.getDataFromServer = function (params) {
+    Restangular.all("employees").getList(params).then(function(responseData){
       $scope.totalServerItems=responseData.totalRecords;
       page = responseData.currentPage;
       pageSize = responseData.pageSize;
-      $scope.setPagingData(responseData.employees,page,pageSize);
+      $scope.setPagingData(responseData,page,pageSize);
     });
   };
 
   //this is the method that is used to call the server and bring back the data in nggrid
   $scope.getPagedDataAsync = function (pageSize, page, searchText) {
-    setTimeout(function () {
-      var data;
       var page = $scope.pagingOptions.currentPage;
       var pageSize = $scope.pagingOptions.pageSize;
 
@@ -68,9 +77,8 @@ angular.module( 'myAngularApp.employee', [
       else
       {
         params = { currentPage: page, pageSize: pageSize };
-        $scope.getDataFromServer(params, pageSize);
+        $scope.getDataFromServer(params);
       }
-    },100);
   };
 
   //according to the data coming from server side,pagination will be set accordingly
@@ -111,8 +119,5 @@ angular.module( 'myAngularApp.employee', [
                      ]
   };
   $scope.getPagedDataAsync($scope.pagingOptions.pageSize, $scope.pagingOptions.currentPage);
-})
-.factory('EmployeeResponse', function ( $resource ) {
-  return $resource('../employees.json');
 })
 ;
